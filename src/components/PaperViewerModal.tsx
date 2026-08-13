@@ -223,6 +223,7 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
           </div>
 
           {/* Side Drawer (AI Report & Alternate Backup Versions - Rule 3) */}
+          {showAiReport && (
           <div className="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-ink/10 p-5 overflow-y-auto space-y-5 shrink-0">
             {/* Rule 3 Main Set Status Badge */}
             <div
@@ -336,6 +337,7 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
               )}
             </div>
           </div>
+          )}
         </div>
       </div>
     </div>
