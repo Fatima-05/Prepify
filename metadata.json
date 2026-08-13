@@ -1,0 +1,6 @@
+{
+  "name": "Prepify",
+  "description": "Past papers repository for COMSATS University Abbottabad Campus with AI auto-verification, duplicate management, and moderation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
