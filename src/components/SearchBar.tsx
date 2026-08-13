@@ -119,7 +119,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <option value="">All Departments</option>
               {departments.map((dept) => (
                 <option key={dept.id} value={dept.id}>
-                  {dept.name} ({dept.id})
+                  {dept.name}
                 </option>
               ))}
             </select>

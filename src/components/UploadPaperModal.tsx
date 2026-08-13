@@ -21,7 +21,11 @@ import {
   PaperScanImage,
   UserSession,
 } from '../types';
-import { normalizeInstructorName, buildPaperTitle } from '../utils/normalization';
+import {
+  normalizeInstructorName,
+  buildPaperTitle,
+  generateCourseCode,
+} from '../utils/normalization';
 import { createSamplePaperDataUrl } from '../utils/pdfGenerator';
 import { compressImageFile } from '../utils/imageUtils';
 import { EXAM_TYPES, YEARS } from '../constants';
@@ -56,7 +60,7 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
 
   // Form State
   const [departmentId, setDepartmentId] = useState(
-    user.departmentId || departments[0]?.id || 'CS'
+    user.departmentId || departments[0]?.id || 'BCS'
   );
   const [courseCode, setCourseCode] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
@@ -79,13 +83,30 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
   const currentDept = departments.find((d) => d.id === departmentId);
   const filteredCourses = courses.filter((c) => c.departmentId === departmentId);
 
-  // Auto populate course title when code is selected
-  const handleCourseCodeChange = (code: string) => {
-    setCourseCode(code);
-    const found = courses.find((c) => c.code === code);
-    if (found) {
-      setCourseTitle(found.title);
+  // Course name is the primary input; code is looked up or auto-generated
+  const handleCourseNameChange = (name: string) => {
+    setCourseTitle(name);
+
+    if (!name.trim()) {
+      setCourseCode('');
+      return;
     }
+
+    const found = courses.find(
+      (c) => c.title.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (found) {
+      setCourseCode(found.code);
+      return;
+    }
+
+    let code = generateCourseCode(name);
+    let n = 2;
+    while (courses.some((c) => c.code.toLowerCase() === code.toLowerCase())) {
+      code = `${generateCourseCode(name)}${n}`;
+      n += 1;
+    }
+    setCourseCode(code);
   };
 
   // Convert uploaded image files to base64
@@ -112,13 +133,17 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
 
   // Helper to add a sample simulated paper scan page
   const handleAddSampleScanPage = () => {
-    const selectedCourse = courses.find((c) => c.code === courseCode);
-    const cTitle = selectedCourse ? selectedCourse.title : courseTitle || 'Sample Course Exam';
-    const deptName = currentDept ? currentDept.name : 'Computer Science';
+    const selectedCourse = courses.find(
+      (c) => c.title.toLowerCase() === courseTitle.trim().toLowerCase()
+    );
+    const cTitle = selectedCourse
+      ? selectedCourse.title
+      : courseTitle || 'Sample Course Exam';
+    const deptName = currentDept ? currentDept.name : 'BCS';
     const pageNum = uploadedImages.length + 1;
 
     const sampleUrl = createSamplePaperDataUrl(
-      courseCode || 'CSC221',
+      courseCode || 'CRS',
       cTitle,
       deptName,
       examType,
@@ -154,7 +179,7 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     try {
       setTimeout(() => setInspectionStepText('1/3 Scanning for moderation & explicit content...'), 600);
       setTimeout(() => setInspectionStepText('2/3 OCR extracting course headers & fuzzy matching...'), 1400);
-      setTimeout(() => setInspectionStepText('3/3 Evaluating Rule 3 completeness & duplicate index...'), 2200);
+      setTimeout(() => setInspectionStepText('3/3 Evaluating scan completeness & checking for duplicates...'), 2200);
 
       const response = await fetch('/api/verify-paper', {
         method: 'POST',
@@ -398,52 +423,45 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                   onChange={(e) => {
                     setDepartmentId(e.target.value);
                     setCourseCode('');
+                    setCourseTitle('');
                     setInstructorInput('');
                   }}
                   className={inputClass}
                 >
                   {departments.map((d) => (
                     <option key={d.id} value={d.id}>
-                      {d.name} ({d.id})
+                      {d.name}
                     </option>
                   ))}
                 </select>
               </div>
 
               {/* Course Selection */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-taupe mb-1.5">
-                    2. Course Code
-                  </label>
-                  <input
-                    list="course-options"
-                    value={courseCode}
-                    onChange={(e) => handleCourseCodeChange(e.target.value)}
-                    placeholder="e.g. CSC221 or type a new course code"
-                    className={inputClass}
-                  />
-                  <datalist id="course-options">
-                    {filteredCourses.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.title}
-                      </option>
-                    ))}
-                  </datalist>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-taupe mb-1.5">
-                    Course Title
-                  </label>
-                  <input
-                    type="text"
-                    value={courseTitle}
-                    onChange={(e) => setCourseTitle(e.target.value)}
-                    placeholder="e.g. Data Structures & Algorithms"
-                    className={inputClass}
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-taupe mb-1.5">
+                  2. Course Name
+                </label>
+                <input
+                  list="course-options"
+                  value={courseTitle}
+                  onChange={(e) => handleCourseNameChange(e.target.value)}
+                  placeholder="e.g. Data Structures & Algorithms"
+                  className={inputClass}
+                />
+                <datalist id="course-options">
+                  {filteredCourses.map((c) => (
+                    <option key={c.code} value={c.title} />
+                  ))}
+                </datalist>
+                {courseCode && (
+                  <p className="text-[11px] text-taupe mt-1.5">
+                    Course code:{' '}
+                    <span className="font-mono text-maroon font-semibold">
+                      {courseCode}
+                    </span>{' '}
+                    (auto-detected)
+                  </p>
+                )}
               </div>
 
               {/* Exam Type & Year */}
@@ -487,7 +505,7 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
               <div>
                 <div className="flex justify-between items-center mb-1.5">
                   <label className="block text-xs font-semibold text-taupe">
-                    5. Instructor (Rule 1: Scoped to {currentDept?.id})
+                    5. Instructor ({currentDept?.id})
                   </label>
                   <button
                     type="button"
@@ -516,18 +534,18 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                     type="text"
                     value={instructorInput}
                     onChange={(e) => setInstructorInput(e.target.value)}
-                    placeholder="e.g. Dr. Faisal Khan (Auto-normalized by Rule 4)"
+                    placeholder="e.g. Dr. Faisal Khan"
                     className={inputClass}
                   />
                 )}
                 <p className="text-[11px] text-taupe mt-1.5">
-                  Rule 4: Instructor names are automatically normalized (e.g. "DR. ALI" saves as "Dr. Ali").
+                  Instructor names are automatically normalized (e.g. "DR. ALI" saves as "Dr. Ali").
                 </p>
               </div>
 
               <div className="pt-2 flex justify-end">
                 <button
-                  disabled={!courseCode || !instructorInput}
+                  disabled={!courseTitle || !instructorInput}
                   onClick={() => setStep('images')}
                   className="px-5 py-2.5 rounded-lg bg-maroon hover:bg-maroon-dark text-cream font-semibold text-sm transition-colors disabled:opacity-40 disabled:pointer-events-none shadow-sm"
                 >
@@ -798,8 +816,8 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
               {inspectionResult.status !== 'Rejected' && (
                 <p className="text-[11px] text-taupe flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  Rule 3 check: this paper will be indexed against existing
-                  duplicates and promoted/demoted to Main or Backup set
+                  Duplicate check: this paper will be indexed against existing
+                  scans and promoted/demoted to Main or Backup set
                   automatically.
                 </p>
               )}

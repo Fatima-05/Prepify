@@ -38,7 +38,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [adminTab, setAdminTab] = useState<'appeals' | 'database' | 'instructors'>('appeals');
 
   // New Instructor state
-  const [selectedDeptForInstructor, setSelectedDeptForInstructor] = useState('CS');
+  const [selectedDeptForInstructor, setSelectedDeptForInstructor] = useState('BCS');
   const [newInstructorName, setNewInstructorName] = useState('');
 
   // Search filter inside admin database
@@ -104,7 +104,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </span>
             </div>
             <p className="text-[13px] text-cream/60 mt-0.5">
-              Review appealed rejections, manage faculty mappings, and enforce Rule 3 Clean Set indexing.
+              Review appealed rejections, manage faculty mappings, and enforce clean-set duplicate indexing.
             </p>
           </div>
         </div>
@@ -275,7 +275,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <th className="p-3.5">Course / Paper</th>
                     <th className="p-3.5">Instructor</th>
                     <th className="p-3.5">Status</th>
-                    <th className="p-3.5">Rule 3 Role</th>
+                    <th className="p-3.5">Set Role</th>
                     <th className="p-3.5">Pages</th>
                     <th className="p-3.5">Contributor</th>
                     <th className="p-3.5 text-right">Actions</th>
@@ -438,7 +438,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               >
                 <div className="flex items-center justify-between border-b border-ink/10 pb-2.5">
                   <h4 className="font-bold text-ink text-sm">
-                    {dept.name} ({dept.id})
+                    {dept.name}
                   </h4>
                   <span className="text-[11px] font-mono bg-sand/10 text-sand-dark px-2 py-0.5 rounded border border-sand/25">
                     {dept.instructors.length} Instructors
@@ -453,7 +453,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     >
                       <span>{inst}</span>
                       <span className="text-[10px] text-taupe font-mono">
-                        Rule 1 Scoped
+                        Scoped
                       </span>
                     </li>
                   ))}

@@ -2,13 +2,20 @@
  * Prepify (COMSATS Abbottabad Campus) - Core Types
  */
 
-export type ExamType = 'Sessional 1' | 'Sessional 2' | 'Terminal';
+export type ExamType =
+  | 'Mid'
+  | 'Terminal'
+  | 'Quizzes'
+  | 'Assignments'
+  | 'Mid Lab'
+  | 'Final Lab'
+  | 'Lab Assignment';
 
 export type PaperStatus = 'Approved' | 'Pending Verification' | 'Rejected' | 'Appealed';
 
 export interface Department {
-  id: string; // e.g. 'CS', 'ECE', 'CE', 'MS', 'HUM', 'MTH'
-  name: string; // e.g. 'Computer Science'
+  id: string; // e.g. 'BCS', 'BEE', 'HUM'
+  name: string; // Program code, e.g. 'BCS'
   codePrefixes: string[]; // e.g. ['CSC', 'SEN']
   instructors: string[]; // List of official instructors (Rule 1)
 }
@@ -16,7 +23,7 @@ export interface Department {
 export interface Course {
   code: string; // e.g. 'CSC221'
   title: string; // e.g. 'Data Structures & Algorithms'
-  departmentId: string; // e.g. 'CS'
+  departmentId: string; // e.g. 'BCS'
 }
 
 export interface PaperScanImage {

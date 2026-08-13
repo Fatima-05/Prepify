@@ -21,8 +21,12 @@ interface PaperCardProps {
 
 const EXAM_STYLES: Record<string, string> = {
   Terminal: 'bg-maroon/10 text-maroon border-maroon/20',
-  'Sessional 1': 'bg-sand/15 text-sand-dark border-sand/30',
-  'Sessional 2': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  Mid: 'bg-sand/15 text-sand-dark border-sand/30',
+  Quizzes: 'bg-amber-50 text-amber-700 border-amber-200',
+  Assignments: 'bg-sky-50 text-sky-700 border-sky-200',
+  'Mid Lab': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  'Final Lab': 'bg-violet-50 text-violet-700 border-violet-200',
+  'Lab Assignment': 'bg-rose-50 text-rose-700 border-rose-200',
 };
 
 export const PaperCard: React.FC<PaperCardProps> = ({

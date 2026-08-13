@@ -64,3 +64,40 @@ export function buildPaperTitle(
 ): string {
   return `${courseCode} ${examType} (${year}) - ${courseTitle}`;
 }
+
+const STOP_WORDS = new Set([
+  'and',
+  'or',
+  'of',
+  'the',
+  'a',
+  'an',
+  'to',
+  'for',
+  'with',
+  'in',
+  'on',
+  'at',
+  'into',
+  'from',
+]);
+
+/**
+ * Derives a short course code from a course name when no official code exists.
+ * "Data Structures & Algorithms" -> "DSA", "Digital Logic Design" -> "DLD".
+ */
+export function generateCourseCode(title: string): string {
+  const words = title
+    .replace(/&/g, ' ')
+    .split(/\s+/)
+    .map((w) => w.replace(/[^a-zA-Z0-9]/g, ''))
+    .filter((w) => w.length > 0);
+
+  const letters = words
+    .filter((w) => !STOP_WORDS.has(w.toLowerCase()))
+    .map((w) => w.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 4);
+
+  return letters || 'CRS';
+}

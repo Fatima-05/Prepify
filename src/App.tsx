@@ -3,9 +3,6 @@ import {
   Header,
 } from './components/Header';
 import {
-  RulesBanner,
-} from './components/RulesBanner';
-import {
   SearchBar,
 } from './components/SearchBar';
 import {
@@ -37,12 +34,12 @@ import {
   INITIAL_COURSES,
   INITIAL_PAPERS,
 } from './data/mockData';
-import { FileText, Sparkles, BookOpen, ShieldCheck, X } from 'lucide-react';
+import { FileText, Sparkles, BookOpen } from 'lucide-react';
 
 export default function App() {
   // Load departments with local state persistence
   const [departments, setDepartments] = useState<Department[]>(() => {
-    const saved = localStorage.getItem('cui_atd_departments');
+    const saved = localStorage.getItem('cui_atd_departments_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -55,7 +52,7 @@ export default function App() {
 
   // Load courses (persisted so newly added courses survive reloads)
   const [courses, setCourses] = useState<Course[]>(() => {
-    const saved = localStorage.getItem('cui_atd_courses');
+    const saved = localStorage.getItem('cui_atd_courses_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -68,7 +65,7 @@ export default function App() {
 
   // Load papers store with local state persistence
   const [papers, setPapers] = useState<Paper[]>(() => {
-    const saved = localStorage.getItem('cui_atd_papers');
+    const saved = localStorage.getItem('cui_atd_papers_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -81,7 +78,7 @@ export default function App() {
 
   // User auth state
   const [user, setUser] = useState<UserSession>(() => {
-    const saved = localStorage.getItem('cui_atd_user');
+    const saved = localStorage.getItem('cui_atd_user_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -98,10 +95,9 @@ export default function App() {
   });
 
   // Navigation & Modals State
-  const [activeTab, setActiveTab] = useState<'browse' | 'upload' | 'admin' | 'rules'>('browse');
+  const [activeTab, setActiveTab] = useState<'browse' | 'upload' | 'admin'>('browse');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
-  const [showRulesBanner, setShowRulesBanner] = useState(true);
 
   // Notification Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -130,19 +126,19 @@ export default function App() {
 
   // Save to localStorage whenever papers or departments change
   useEffect(() => {
-    persist('cui_atd_papers', papers, 'papers');
+    persist('cui_atd_papers_v2', papers, 'papers');
   }, [papers]);
 
   useEffect(() => {
-    persist('cui_atd_departments', departments, 'departments');
+    persist('cui_atd_departments_v2', departments, 'departments');
   }, [departments]);
 
   useEffect(() => {
-    persist('cui_atd_courses', courses, 'courses');
+    persist('cui_atd_courses_v2', courses, 'courses');
   }, [courses]);
 
   useEffect(() => {
-    persist('cui_atd_user', user, 'user');
+    persist('cui_atd_user_v2', user, 'user');
   }, [user]);
 
   useEffect(
@@ -234,7 +230,7 @@ export default function App() {
     setPapers((prev) =>
       prev.map((p) => (p.id === paperId ? { ...p, isMain: !p.isMain } : p))
     );
-    showToast(`Rule 3 Set version updated.`);
+    showToast(`Main set version updated.`);
   };
 
   const handleDeletePaper = (paperId: string) => {
@@ -282,7 +278,7 @@ export default function App() {
 
   const appealsCount = papers.filter((p) => p.status === 'Appealed').length;
 
-  const navigateTo = (tab: 'browse' | 'upload' | 'admin' | 'rules') => {
+  const navigateTo = (tab: 'browse' | 'upload' | 'admin') => {
     if (tab === 'admin' && user.role !== 'admin') {
       showToast('Admin access requires signing in as an administrator.');
       setShowAuthModal(true);
@@ -334,33 +330,6 @@ export default function App() {
                 Verified papers from COMSATS University Abbottabad Campus
               </p>
             </div>
-
-            {/* Slim Rules Strip (Dismissible) */}
-            {showRulesBanner && (
-              <div className="mb-8 flex items-center gap-3 bg-white border border-sand/30 rounded-xl px-4 py-3 shadow-sm">
-                <div className="p-1.5 rounded-lg bg-maroon text-cream shrink-0">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <p className="text-sm text-taupe flex-1">
-                  <strong className="text-ink">AI Gatekeeper</strong> verifies
-                  every upload for course, department &amp; instructor before
-                  it's published.
-                </p>
-                <button
-                  onClick={() => setActiveTab('rules')}
-                  className="text-xs font-semibold text-maroon hover:underline shrink-0"
-                >
-                  View Rules
-                </button>
-                <button
-                  onClick={() => setShowRulesBanner(false)}
-                  className="p-1 text-taupe hover:text-ink transition-colors shrink-0"
-                  aria-label="Dismiss"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            )}
 
             {/* Search Controls */}
             <SearchBar
@@ -452,13 +421,6 @@ export default function App() {
             onAddInstructor={handleAddInstructor}
             onSelectPaper={(paper) => setSelectedPaper(paper)}
           />
-        )}
-
-        {/* TAB 4: RULES BLUEPRINT DETAILED VIEW */}
-        {activeTab === 'rules' && (
-          <div className="max-w-4xl mx-auto">
-            <RulesBanner />
-          </div>
         )}
       </main>
 

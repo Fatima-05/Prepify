@@ -240,8 +240,8 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
                 )}
                 <span>
                   {paper.isMain
-                    ? 'Rule 3: Main Version (Clean Set)'
-                    : 'Rule 3: Alternate Backup Scan'}
+                    ? 'Main Version (Clean Set)'
+                    : 'Alternate Backup Scan'}
                 </span>
               </div>
               <p className="text-xs opacity-90">

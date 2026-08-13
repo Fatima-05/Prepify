@@ -1,6 +1,14 @@
 import type { ExamType } from './types';
 
-export const EXAM_TYPES: ExamType[] = ['Sessional 1', 'Sessional 2', 'Terminal'];
+export const EXAM_TYPES: ExamType[] = [
+  'Mid',
+  'Terminal',
+  'Quizzes',
+  'Assignments',
+  'Mid Lab',
+  'Final Lab',
+  'Lab Assignment',
+];
 
 export const MIN_YEAR = 2018;
 

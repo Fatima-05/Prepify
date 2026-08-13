@@ -38,7 +38,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       name: name.trim() || (role === 'admin' ? 'Admin' : 'Contributor'),
       role,
       isAuthenticated: true,
-      departmentId: 'CS',
+      departmentId: 'BCS',
     });
   };
 
@@ -48,7 +48,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       name: 'Hamza Ahmed',
       role: 'contributor',
       isAuthenticated: true,
-      departmentId: 'CS',
+      departmentId: 'BCS',
     });
   };
 
@@ -58,7 +58,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       name: 'Dr. Faisal (Exam Dept Head)',
       role: 'admin',
       isAuthenticated: true,
-      departmentId: 'CS',
+      departmentId: 'BCS',
     });
   };
 

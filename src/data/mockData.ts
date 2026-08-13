@@ -1,136 +1,116 @@
 import { Department, Course, Paper } from '../types';
 import { createSamplePaperDataUrl } from '../utils/pdfGenerator';
 
-export const INITIAL_DEPARTMENTS: Department[] = [
-  {
-    id: 'CS',
-    name: 'Computer Science',
-    codePrefixes: ['CSC', 'SEN'],
-    instructors: [
-      'Dr. Faisal Khan',
-      'Dr. Ali Safaa',
-      'Prof. Dr. Usman Ahmad',
-      'Dr. Sadaf Tanveer',
-      'Sir Waqas Malik',
-      'Dr. Sajjad A. Madani',
-      'Dr. Tadoon Khan',
-    ],
-  },
-  {
-    id: 'ECE',
-    name: 'Electrical & Computer Engineering',
-    codePrefixes: ['EEE'],
-    instructors: [
-      'Dr. Shahid Khattak',
-      'Dr. Muhammad Yasin',
-      'Engr. Imran Khan',
-      'Dr. Laiq Khan',
-      'Engr. Bilal Ahmad',
-    ],
-  },
-  {
-    id: 'CE',
-    name: 'Civil Engineering',
-    codePrefixes: ['CVE'],
-    instructors: [
-      'Dr. Mohammad Riyad',
-      'Dr. Tayyab Zafar',
-      'Engr. Farhan Ali',
-      'Dr. Arshad Hussain',
-    ],
-  },
-  {
-    id: 'MS',
-    name: 'Management Sciences',
-    codePrefixes: ['MGT'],
-    instructors: [
-      'Dr. Amjad Ali',
-      'Dr. Shehla Amjad',
-      'Dr. Kashif Rashid',
-      'Sir Asadullah Khan',
-    ],
-  },
-  {
-    id: 'HUM',
-    name: 'Humanities',
-    codePrefixes: ['HUM'],
-    instructors: [
-      'Dr. Mushtaq Khan',
-      "Ma'am Sobia",
-      'Sir Rizwan Ali',
-      'Dr. Sultan Mahmood',
-    ],
-  },
-  {
-    id: 'MTH',
-    name: 'Mathematics',
-    codePrefixes: ['MTH'],
-    instructors: [
-      'Dr. Madad Khan',
-      'Dr. Sultan Mahmood',
-      'Dr. Samiullah',
-      'Dr. Muhammad Sarwar',
-    ],
-  },
-  {
-    id: 'PHM',
-    name: 'Pharmacy',
-    codePrefixes: ['PHM'],
-    instructors: [
-      'Dr. Nisar-ur-Rehman',
-      'Dr. Abdul Jabbar',
-      'Dr. Taous Khan',
-    ],
-  },
-  {
-    id: 'ES',
-    name: 'Earth Sciences',
-    codePrefixes: ['ERS'],
-    instructors: [
-      'Dr. Ishtiaq A.K. Jadoon',
-      'Dr. Mohammad Umar',
-      'Dr. Amjad Sabir',
-    ],
-  },
+const DEPARTMENT_CODES = [
+  'BCE', 'BCS', 'BDA', 'BDS', 'BEC', 'BEE', 'BEN', 'BES', 'BIT', 'BMD',
+  'BML', 'BMT', 'BPY', 'BS (CE)', 'BSE', 'BSM', 'BTN', 'BTY', 'CVE', 'EEE',
+  'EPE', 'ERS', 'GEO', 'HUM', 'MBA', 'MCS', 'MDS', 'MIT', 'PBT', 'PCE',
+  'PCM', 'PCS', 'PCV', 'PDS', 'PEE', 'PES', 'PGO', 'PGP', 'PHM', 'PMS',
+  'PMT', 'PPY', 'R05', 'RAI', 'RBA', 'RBF', 'RBT', 'RCE', 'RCM', 'RCP',
+  'RCS', 'RCT', 'RCV', 'RDS', 'REC', 'REE', 'REN', 'RER', 'RES', 'RMB',
+  'RMS', 'RMT', 'RPM', 'RPY', 'RSW',
 ];
 
+// Seed instructors for a few core programs so dropdowns aren't empty on first run
+const INSTRUCTOR_SEEDS: Record<string, string[]> = {
+  BCS: [
+    'Dr. Faisal Khan',
+    'Dr. Ali Safaa',
+    'Prof. Dr. Usman Ahmad',
+    'Dr. Sadaf Tanveer',
+    'Sir Waqas Malik',
+    'Dr. Sajjad A. Madani',
+    'Dr. Tadoon Khan',
+  ],
+  BEE: [
+    'Dr. Shahid Khattak',
+    'Dr. Muhammad Yasin',
+    'Engr. Imran Khan',
+    'Dr. Laiq Khan',
+    'Engr. Bilal Ahmad',
+  ],
+  'BS (CE)': [
+    'Dr. Mohammad Riyad',
+    'Dr. Tayyab Zafar',
+    'Engr. Farhan Ali',
+    'Dr. Arshad Hussain',
+  ],
+  MBA: [
+    'Dr. Amjad Ali',
+    'Dr. Shehla Amjad',
+    'Dr. Kashif Rashid',
+    'Sir Asadullah Khan',
+  ],
+  HUM: [
+    'Dr. Mushtaq Khan',
+    "Ma'am Sobia",
+    'Sir Rizwan Ali',
+    'Dr. Sultan Mahmood',
+  ],
+  BMT: [
+    'Dr. Madad Khan',
+    'Dr. Sultan Mahmood',
+    'Dr. Samiullah',
+    'Dr. Muhammad Sarwar',
+  ],
+  PHM: [
+    'Dr. Nisar-ur-Rehman',
+    'Dr. Abdul Jabbar',
+    'Dr. Taous Khan',
+  ],
+  ERS: [
+    'Dr. Ishtiaq A.K. Jadoon',
+    'Dr. Mohammad Umar',
+    'Dr. Amjad Sabir',
+  ],
+};
+
+export const INITIAL_DEPARTMENTS: Department[] = DEPARTMENT_CODES.map(
+  (code) => ({
+    id: code,
+    name: code,
+    codePrefixes: [code],
+    instructors: INSTRUCTOR_SEEDS[code] || [],
+  })
+);
+
 export const INITIAL_COURSES: Course[] = [
-  // CS
-  { code: 'CSC101', title: 'Introduction to ICT', departmentId: 'CS' },
-  { code: 'CSC103', title: 'Programming Fundamentals', departmentId: 'CS' },
-  { code: 'CSC211', title: 'Object Oriented Programming', departmentId: 'CS' },
-  { code: 'CSC221', title: 'Data Structures & Algorithms', departmentId: 'CS' },
-  { code: 'CSC241', title: 'Database Systems', departmentId: 'CS' },
-  { code: 'CSC322', title: 'Operating Systems', departmentId: 'CS' },
-  { code: 'CSC339', title: 'Software Engineering', departmentId: 'CS' },
-  { code: 'CSC354', title: 'Computer Networks', departmentId: 'CS' },
-  { code: 'CSC471', title: 'Artificial Intelligence', departmentId: 'CS' },
+  // BCS
+  { code: 'CSC101', title: 'Introduction to ICT', departmentId: 'BCS' },
+  { code: 'CSC103', title: 'Programming Fundamentals', departmentId: 'BCS' },
+  { code: 'CSC211', title: 'Object Oriented Programming', departmentId: 'BCS' },
+  { code: 'CSC221', title: 'Data Structures & Algorithms', departmentId: 'BCS' },
+  { code: 'CSC241', title: 'Database Systems', departmentId: 'BCS' },
+  { code: 'CSC322', title: 'Operating Systems', departmentId: 'BCS' },
+  { code: 'CSC339', title: 'Software Engineering', departmentId: 'BCS' },
+  { code: 'CSC354', title: 'Computer Networks', departmentId: 'BCS' },
+  { code: 'CSC471', title: 'Artificial Intelligence', departmentId: 'BCS' },
 
-  // ECE
-  { code: 'EEE111', title: 'Electric Circuits I', departmentId: 'ECE' },
-  { code: 'EEE222', title: 'Digital Logic Design', departmentId: 'ECE' },
-  { code: 'EEE312', title: 'Signals & Systems', departmentId: 'ECE' },
-  { code: 'EEE331', title: 'Microprocessor Systems', departmentId: 'ECE' },
+  // BEE
+  { code: 'EEE111', title: 'Electric Circuits I', departmentId: 'BEE' },
+  { code: 'EEE222', title: 'Digital Logic Design', departmentId: 'BEE' },
+  { code: 'EEE312', title: 'Signals & Systems', departmentId: 'BEE' },
+  { code: 'EEE331', title: 'Microprocessor Systems', departmentId: 'BEE' },
 
-  // CE
-  { code: 'CVE101', title: 'Engineering Mechanics', departmentId: 'CE' },
-  { code: 'CVE210', title: 'Fluid Mechanics', departmentId: 'CE' },
-  { code: 'CVE315', title: 'Structural Analysis', departmentId: 'CE' },
+  // BS (CE)
+  { code: 'CVE101', title: 'Engineering Mechanics', departmentId: 'BS (CE)' },
+  { code: 'CVE210', title: 'Fluid Mechanics', departmentId: 'BS (CE)' },
+  { code: 'CVE315', title: 'Structural Analysis', departmentId: 'BS (CE)' },
 
-  // MS
-  { code: 'MGT101', title: 'Principles of Management', departmentId: 'MS' },
-  { code: 'MGT201', title: 'Financial Accounting', departmentId: 'MS' },
-  { code: 'MGT350', title: 'Organizational Behavior', departmentId: 'MS' },
+  // MBA
+  { code: 'MGT101', title: 'Principles of Management', departmentId: 'MBA' },
+  { code: 'MGT201', title: 'Financial Accounting', departmentId: 'MBA' },
+  { code: 'MGT350', title: 'Organizational Behavior', departmentId: 'MBA' },
 
   // HUM
   { code: 'HUM100', title: 'English Comprehension & Composition', departmentId: 'HUM' },
   { code: 'HUM110', title: 'Islamic Studies / Ethics', departmentId: 'HUM' },
   { code: 'HUM111', title: 'Pakistan Studies', departmentId: 'HUM' },
 
-  // MTH
-  { code: 'MTH104', title: 'Calculus & Analytical Geometry', departmentId: 'MTH' },
-  { code: 'MTH231', title: 'Linear Algebra', departmentId: 'MTH' },
-  { code: 'MTH242', title: 'Differential Equations', departmentId: 'MTH' },
+  // BMT
+  { code: 'MTH104', title: 'Calculus & Analytical Geometry', departmentId: 'BMT' },
+  { code: 'MTH231', title: 'Linear Algebra', departmentId: 'BMT' },
+  { code: 'MTH242', title: 'Differential Equations', departmentId: 'BMT' },
 ];
 
 export const INITIAL_PAPERS: Paper[] = [
@@ -140,8 +120,8 @@ export const INITIAL_PAPERS: Paper[] = [
     title: 'CSC221 Terminal (2023) - Data Structures & Algorithms',
     courseCode: 'CSC221',
     courseTitle: 'Data Structures & Algorithms',
-    departmentId: 'CS',
-    departmentName: 'Computer Science',
+    departmentId: 'BCS',
+    departmentName: 'BCS',
     examType: 'Terminal',
     year: 2023,
     instructor: 'Dr. Faisal Khan',
@@ -161,7 +141,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC221',
           'Data Structures & Algorithms',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Faisal Khan',
@@ -180,7 +160,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC221',
           'Data Structures & Algorithms',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Faisal Khan',
@@ -199,7 +179,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC221',
           'Data Structures & Algorithms',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Faisal Khan',
@@ -231,8 +211,8 @@ export const INITIAL_PAPERS: Paper[] = [
     title: 'CSC221 Terminal (2023) - Data Structures [Scan B]',
     courseCode: 'CSC221',
     courseTitle: 'Data Structures & Algorithms',
-    departmentId: 'CS',
-    departmentName: 'Computer Science',
+    departmentId: 'BCS',
+    departmentName: 'BCS',
     examType: 'Terminal',
     year: 2023,
     instructor: 'Dr. Faisal Khan',
@@ -252,7 +232,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC221',
           'Data Structures & Algorithms',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Faisal Khan',
@@ -270,7 +250,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC221',
           'Data Structures & Algorithms',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Faisal Khan',
@@ -295,15 +275,15 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 3. Programming Fundamentals Sessional 1 2024 - MAIN
+  // 3. Programming Fundamentals Mid 2024 - MAIN
   {
     id: 'paper-csc103-sess1-2024-main',
-    title: 'CSC103 Sessional 1 (2024) - Programming Fundamentals',
+    title: 'CSC103 Mid (2024) - Programming Fundamentals',
     courseCode: 'CSC103',
     courseTitle: 'Programming Fundamentals',
-    departmentId: 'CS',
-    departmentName: 'Computer Science',
-    examType: 'Sessional 1',
+    departmentId: 'BCS',
+    departmentName: 'BCS',
+    examType: 'Mid',
     year: 2024,
     instructor: 'Dr. Ali Safaa',
     uploaderEmail: 'sp24-bcs-001@cuiatd.edu.pk',
@@ -322,8 +302,8 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC103',
           'Programming Fundamentals',
-          'Computer Science',
-          'Sessional 1',
+          'BCS',
+          'Mid',
           2024,
           'Dr. Ali Safaa',
           1,
@@ -341,8 +321,8 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC103',
           'Programming Fundamentals',
-          'Computer Science',
-          'Sessional 1',
+          'BCS',
+          'Mid',
           2024,
           'Dr. Ali Safaa',
           2,
@@ -372,8 +352,8 @@ export const INITIAL_PAPERS: Paper[] = [
     title: 'EEE222 Terminal (2023) - Digital Logic Design',
     courseCode: 'EEE222',
     courseTitle: 'Digital Logic Design',
-    departmentId: 'ECE',
-    departmentName: 'Electrical & Computer Engineering',
+    departmentId: 'BEE',
+    departmentName: 'BEE',
     examType: 'Terminal',
     year: 2023,
     instructor: 'Dr. Shahid Khattak',
@@ -393,7 +373,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'EEE222',
           'Digital Logic Design',
-          'Electrical & Computer Engineering',
+          'BEE',
           'Terminal',
           2023,
           'Dr. Shahid Khattak',
@@ -412,7 +392,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'EEE222',
           'Digital Logic Design',
-          'Electrical & Computer Engineering',
+          'BEE',
           'Terminal',
           2023,
           'Dr. Shahid Khattak',
@@ -437,15 +417,15 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 5. Calculus & Analytical Geometry Sessional 2 2023 - MAIN
+  // 5. Calculus & Analytical Geometry Mid 2023 - MAIN
   {
     id: 'paper-mth104-sess2-2023-main',
-    title: 'MTH104 Sessional 2 (2023) - Calculus & Analytical Geometry',
+    title: 'MTH104 Mid (2023) - Calculus & Analytical Geometry',
     courseCode: 'MTH104',
     courseTitle: 'Calculus & Analytical Geometry',
-    departmentId: 'MTH',
-    departmentName: 'Mathematics',
-    examType: 'Sessional 2',
+    departmentId: 'BMT',
+    departmentName: 'BMT',
+    examType: 'Mid',
     year: 2023,
     instructor: 'Dr. Madad Khan',
     uploaderEmail: 'sp23-bcs-088@cuiatd.edu.pk',
@@ -464,8 +444,8 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'MTH104',
           'Calculus & Analytical Geometry',
-          'Mathematics',
-          'Sessional 2',
+          'BMT',
+          'Mid',
           2023,
           'Dr. Madad Khan',
           1,
@@ -483,8 +463,8 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'MTH104',
           'Calculus & Analytical Geometry',
-          'Mathematics',
-          'Sessional 2',
+          'BMT',
+          'Mid',
           2023,
           'Dr. Madad Khan',
           2,
@@ -514,8 +494,8 @@ export const INITIAL_PAPERS: Paper[] = [
     title: 'CSC322 Terminal (2023) - Operating Systems [Appealed Submission]',
     courseCode: 'CSC322',
     courseTitle: 'Operating Systems',
-    departmentId: 'CS',
-    departmentName: 'Computer Science',
+    departmentId: 'BCS',
+    departmentName: 'BCS',
     examType: 'Terminal',
     year: 2023,
     instructor: 'Dr. Sajjad A. Madani',
@@ -538,7 +518,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC322',
           'Operating Systems',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Sajjad A. Madani',
@@ -557,7 +537,7 @@ export const INITIAL_PAPERS: Paper[] = [
         dataUrl: createSamplePaperDataUrl(
           'CSC322',
           'Operating Systems',
-          'Computer Science',
+          'BCS',
           'Terminal',
           2023,
           'Dr. Sajjad A. Madani',
