@@ -1,7 +1,3 @@
-/**
- * Downscales and compresses an image file to a JPEG data URL.
- * Keeps storage usage small (protects against localStorage quota errors).
- */
 export function compressImageFile(
   file: File,
   maxDim = 1400,
@@ -37,7 +33,6 @@ export function compressImageFile(
         ctx.drawImage(img, 0, 0, width, height);
         resolve(canvas.toDataURL('image/jpeg', quality));
       };
-      // If the image can't be decoded (e.g. unusual format), keep the original
       img.onerror = () => resolve(original);
       img.src = original;
     };

@@ -82,7 +82,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         </div>
 
-        {/* Quick Demo Login Triggers */}
         <div className="mb-6 bg-cream/50 p-3.5 rounded-xl border border-ink/10 space-y-2">
           <span className="text-[10px] font-bold uppercase text-taupe block">
             Instant Test Login Shortcuts

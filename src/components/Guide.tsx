@@ -107,7 +107,6 @@ export const Guide: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
           How Prepify Works
@@ -117,7 +116,6 @@ export const Guide: React.FC = () => {
         </p>
       </div>
 
-      {/* Section: What is this? */}
       <GuideSection
         title="What is Prepify?"
         subtitle="A verified past-papers repository"
@@ -131,7 +129,6 @@ export const Guide: React.FC = () => {
         </p>
       </GuideSection>
 
-      {/* Section: Glossary */}
       <GuideSection
         title="Words You'll See"
         subtitle="Understanding the terms used in the app"
@@ -195,7 +192,6 @@ export const Guide: React.FC = () => {
         </div>
       </GuideSection>
 
-      {/* Section: How to upload */}
       <GuideSection
         title="How to Upload a Paper"
         subtitle="Four quick steps"
@@ -229,7 +225,6 @@ export const Guide: React.FC = () => {
         </div>
       </GuideSection>
 
-      {/* Section: Verification statuses */}
       <GuideSection
         title="What Happens After Upload"
         subtitle="Verification verdicts explained"
@@ -251,7 +246,6 @@ export const Guide: React.FC = () => {
         </div>
       </GuideSection>
 
-      {/* Section: Searching & downloading */}
       <GuideSection
         title="Searching & Downloading"
         subtitle="Find and save papers"

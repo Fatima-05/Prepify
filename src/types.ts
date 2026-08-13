@@ -1,7 +1,3 @@
-/**
- * Prepify (COMSATS Abbottabad Campus) - Core Types
- */
-
 export type ExamType =
   | 'Mid'
   | 'Terminal'
@@ -14,22 +10,22 @@ export type ExamType =
 export type PaperStatus = 'Approved' | 'Pending Verification' | 'Rejected' | 'Appealed';
 
 export interface Department {
-  id: string; // e.g. 'BCS', 'BEE', 'HUM'
-  name: string; // Program code, e.g. 'BCS'
-  codePrefixes: string[]; // e.g. ['CSC', 'SEN']
-  instructors: string[]; // List of official instructors (Rule 1)
+  id: string;
+  name: string;
+  codePrefixes: string[];
+  instructors: string[];
 }
 
 export interface Course {
-  code: string; // e.g. 'CSC221'
-  title: string; // e.g. 'Data Structures & Algorithms'
-  departmentId: string; // e.g. 'BCS'
+  code: string;
+  title: string;
+  departmentId: string;
 }
 
 export interface PaperScanImage {
   id: string;
   pageNumber: number;
-  dataUrl: string; // base64 or SVG canvas preview URL
+  dataUrl: string;
 }
 
 export interface AIAnalysisReport {
@@ -38,13 +34,13 @@ export interface AIAnalysisReport {
   matchedDepartment: boolean;
   matchedInstructor: boolean;
   detectedPageCount: number;
-  readabilityScore: number; // 0 - 100
-  confidenceScore: number; // 0 - 100
+  readabilityScore: number;
+  confidenceScore: number;
   moderationPassed: boolean;
   moderationFlags?: string[];
   rejectionReason?: string;
   tips?: string[];
-  heuristic?: boolean; // True when no real AI review ran (demo/heuristic fallback)
+  heuristic?: boolean;
 }
 
 export interface Paper {
@@ -65,8 +61,8 @@ export interface Paper {
   readabilityScore: number;
   pageCount: number;
   images: PaperScanImage[];
-  isMain: boolean; // Rule 3: Main version in clean set vs Backup scan
-  parentId?: string; // If this paper is a backup version of a main paper
+  isMain: boolean;
+  parentId?: string;
   aiReport: AIAnalysisReport;
   downloadsCount: number;
   appealReason?: string;

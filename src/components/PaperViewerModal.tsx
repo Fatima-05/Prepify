@@ -35,7 +35,6 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
 
   if (!paper) return null;
 
-  // Find backup or alternate versions for the same metadata key
   const backupVersions = allPapers.filter(
     (p) =>
       p.id !== paper.id &&
@@ -62,7 +61,6 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-ink/40 backdrop-blur-sm overflow-y-auto">
       <div className="bg-white rounded-2xl w-full max-w-6xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto">
-        {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-ink/10 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-maroon text-cream">
@@ -116,11 +114,8 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
           </div>
         </div>
 
-        {/* Modal Main Body */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-cream/40 relative">
-          {/* Paper Canvas Display */}
           <div className="flex-1 flex flex-col items-center justify-between p-4 overflow-auto min-h-[450px] relative">
-            {/* Top Canvas Controls Toolbar */}
             <div className="z-10 bg-white/90 backdrop-blur border border-ink/10 rounded-xl px-4 py-2 flex items-center gap-4 text-sm shadow-sm mb-3">
               <span className="text-taupe font-medium">
                 Page <strong className="text-ink">{currentPage + 1}</strong> of{' '}
@@ -161,7 +156,6 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
               </button>
             </div>
 
-            {/* Image Canvas Container */}
             <div className="flex-1 flex items-center justify-center w-full overflow-auto p-2">
               {activeImage ? (
                 <div
@@ -182,7 +176,6 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
               )}
             </div>
 
-            {/* Bottom Page Switcher Controls */}
             {paper.images.length > 1 && (
               <div className="mt-3 flex items-center gap-3 bg-white/90 backdrop-blur px-4 py-2 rounded-xl border border-ink/10 shadow-sm">
                 <button
@@ -222,10 +215,8 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
             )}
           </div>
 
-          {/* Side Drawer (AI Report & Alternate Backup Versions - Rule 3) */}
           {showAiReport && (
           <div className="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-ink/10 p-5 overflow-y-auto space-y-5 shrink-0">
-            {/* Rule 3 Main Set Status Badge */}
             <div
               className={`p-3.5 rounded-xl border text-sm leading-relaxed ${
                 paper.isMain
@@ -252,7 +243,6 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
               </p>
             </div>
 
-            {/* AI Report Card */}
             <div className="bg-cream/50 rounded-xl p-4 border border-ink/10 space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-taupe flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-sand-dark" />
@@ -301,7 +291,6 @@ export const PaperViewerModal: React.FC<PaperViewerModalProps> = ({
               )}
             </div>
 
-            {/* Alternate / Backup Scans List (Rule 3) */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-taupe mb-2 flex items-center gap-1.5">
                 <Layers className="w-4 h-4 text-sand-dark" />

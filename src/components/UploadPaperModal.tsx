@@ -58,7 +58,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     'metadata' | 'images' | 'inspecting' | 'result'
   >('metadata');
 
-  // Form State
   const [departmentId, setDepartmentId] = useState(
     user.departmentId || departments[0]?.id || 'BCS'
   );
@@ -69,21 +68,17 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
   const [instructorInput, setInstructorInput] = useState('');
   const [isCustomInstructor, setIsCustomInstructor] = useState(false);
 
-  // Uploaded Images
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
 
-  // Inspection Result State
   const [inspectionResult, setInspectionResult] = useState<any>(null);
   const [inspectionStepText, setInspectionStepText] = useState('');
   const [appealReason, setAppealReason] = useState('');
   const [appealSubmitted, setAppealSubmitted] = useState(false);
 
-  // Filter courses & instructors by selected department (Rule 1)
   const currentDept = departments.find((d) => d.id === departmentId);
   const filteredCourses = courses.filter((c) => c.departmentId === departmentId);
 
-  // Course name is the primary input; code is looked up or auto-generated
   const handleCourseNameChange = (name: string) => {
     setCourseTitle(name);
 
@@ -109,7 +104,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     setCourseCode(code);
   };
 
-  // Convert uploaded image files to base64
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
     setIsProcessingFiles(true);
@@ -131,7 +125,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     }
   };
 
-  // Helper to add a sample simulated paper scan page
   const handleAddSampleScanPage = () => {
     const selectedCourse = courses.find(
       (c) => c.title.toLowerCase() === courseTitle.trim().toLowerCase()
@@ -164,7 +157,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Execute AI Gatekeeper Verification
   const startAiVerification = async () => {
     if (uploadedImages.length === 0) return;
 
@@ -173,7 +165,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     setAppealSubmitted(false);
     setInspectionResult(null);
 
-    // Rule 4: Normalize Instructor Name
     const normalizedInstructor = normalizeInstructorName(instructorInput);
 
     try {
@@ -207,7 +198,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
       }, 2800);
     } catch (err) {
       console.error('Error verifying paper:', err);
-      // Fallback
       setInspectionResult({
         confidenceScore: 92,
         readabilityScore: 88,
@@ -229,21 +219,18 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     }
   };
 
-  // Finalize Submission & Rule 3 Clean Set duplicate management logic
   const handleFinalizeUpload = (forcedStatus?: 'Approved' | 'Appealed') => {
     if (!inspectionResult) return;
 
     const normInstructor = inspectionResult.normalizedInstructor;
     const finalStatus = forcedStatus || inspectionResult.status;
 
-    // Build scan images array
     const paperImages: PaperScanImage[] = uploadedImages.map((dataUrl, idx) => ({
       id: `img-${Date.now()}-${idx}`,
       pageNumber: idx + 1,
       dataUrl,
     }));
 
-    // Rule 3 (Completeness over Clarity): Check if paper with same metadata key exists
     const matchingExistingPapers = existingPapers.filter(
       (p) =>
         p.courseCode === courseCode &&
@@ -256,24 +243,19 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
     let updatedPapersList: Paper[] | undefined = undefined;
 
     if (matchingExistingPapers.length > 0 && finalStatus === 'Approved') {
-      // Rule 3: compare against the BEST existing scan (most complete), not just the current Main.
       const bestExisting = [...matchingExistingPapers].sort((a, b) => {
         if (b.pageCount !== a.pageCount) return b.pageCount - a.pageCount;
         return b.readabilityScore - a.readabilityScore;
       })[0];
 
-      // Compare page count first (Completeness)
       if (paperImages.length > bestExisting.pageCount) {
-        // New paper has MORE pages -> New paper becomes Main, existing papers demoted to Backup
         isMain = true;
         updatedPapersList = matchingExistingPapers.map((p) =>
           p.isMain ? { ...p, isMain: false } : p
         );
       } else if (paperImages.length < bestExisting.pageCount) {
-        // Existing best scan has MORE pages -> New paper becomes Backup
         isMain = false;
       } else {
-        // Equal pages -> Compare OCR Readability Score
         if (inspectionResult.readabilityScore > bestExisting.readabilityScore) {
           isMain = true;
           updatedPapersList = matchingExistingPapers.map((p) =>
@@ -312,7 +294,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
 
     onPaperUploaded(newPaperObj, updatedPapersList);
 
-    // Persist custom metadata so it shows up in future dropdowns
     const courseExists = courses.some(
       (c) => c.code.toLowerCase() === courseCode.toLowerCase()
     );
@@ -340,7 +321,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-ink/40 backdrop-blur-sm overflow-y-auto">
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-ink/10">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-maroon text-cream">
@@ -363,7 +343,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
           </button>
         </div>
 
-        {/* Step Indicator */}
         <div className="px-6 pt-5 pb-1">
           <div className="flex items-center gap-1.5">
             {stepLabels.map((label, idx) => (
@@ -400,9 +379,7 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
           </div>
         </div>
 
-        {/* Modal Content */}
         <div className="p-6 overflow-y-auto flex-1">
-          {/* STEP 1: METADATA FORM */}
           {step === 'metadata' && (
             <div className="space-y-5">
               <div className="bg-sand/10 border border-sand/30 p-3.5 rounded-xl text-[13px] text-sand-dark flex gap-2.5 items-start">
@@ -413,7 +390,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </span>
               </div>
 
-              {/* Department */}
               <div>
                 <label className="block text-xs font-semibold text-taupe mb-1.5">
                   1. Department
@@ -436,7 +412,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </select>
               </div>
 
-              {/* Course Selection */}
               <div>
                 <label className="block text-xs font-semibold text-taupe mb-1.5">
                   2. Course Name
@@ -464,7 +439,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 )}
               </div>
 
-              {/* Exam Type & Year */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-taupe mb-1.5">
@@ -501,7 +475,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </div>
               </div>
 
-              {/* Rule 1 (Instructor Scoping) & Rule 4 (Normalization) */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
                   <label className="block text-xs font-semibold text-taupe">
@@ -555,7 +528,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
             </div>
           )}
 
-          {/* STEP 2: IMAGE UPLOAD & PREVIEW */}
           {step === 'images' && (
             <div className="space-y-5">
               <div className="flex items-center justify-between">
@@ -572,7 +544,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </button>
               </div>
 
-              {/* Upload Drop Zone */}
               <label className="border-2 border-dashed border-ink/15 hover:border-sand rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition-colors bg-cream/40">
                 <div className="w-12 h-12 rounded-full bg-sand/15 flex items-center justify-center mb-3">
                   <ImageIcon className="w-6 h-6 text-sand-dark" />
@@ -599,7 +570,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </div>
               )}
 
-              {/* Uploaded Thumbnails Grid */}
               {uploadedImages.length > 0 && (
                 <div>
                   <span className="text-xs font-semibold text-taupe block mb-2">
@@ -651,7 +621,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
             </div>
           )}
 
-          {/* STEP 3: INSPECTING / SCANNING ANIMATION */}
           {step === 'inspecting' && (
             <div className="py-12 flex flex-col items-center justify-center text-center space-y-4">
               <div className="relative">
@@ -674,10 +643,8 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
             </div>
           )}
 
-          {/* STEP 4: DECISION RESULT */}
           {step === 'result' && inspectionResult && (
             <div className="space-y-5">
-              {/* Heuristic / Demo verification notice */}
               {inspectionResult.heuristic && (
                 <div className="bg-sand/10 border border-sand/40 p-3.5 rounded-xl flex items-start gap-2.5 text-sand-dark text-[13px]">
                   <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
@@ -690,7 +657,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </div>
               )}
 
-              {/* Decision Banner */}
               {inspectionResult.status === 'Approved' && (
                 <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-start gap-3 text-emerald-800">
                   <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" />
@@ -734,7 +700,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </div>
               )}
 
-              {/* Inspection Scores Breakdown */}
               <div className="grid grid-cols-3 gap-3 bg-cream/50 p-4 rounded-xl border border-ink/10 text-center">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-taupe block">
@@ -762,7 +727,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </div>
               </div>
 
-              {/* Hard Reject Appeal Form */}
               {inspectionResult.status === 'Rejected' && !appealSubmitted && (
                 <div className="bg-cream/50 border border-ink/10 p-4 rounded-xl space-y-3">
                   <h5 className="text-xs font-bold text-maroon flex items-center gap-1.5">
@@ -801,7 +765,6 @@ export const UploadPaperModal: React.FC<UploadPaperModalProps> = ({
                 </div>
               )}
 
-              {/* Final Submit Actions */}
               {inspectionResult.status !== 'Rejected' && (
                 <div className="pt-2 flex justify-end">
                   <button

@@ -1,14 +1,8 @@
-/**
- * Rule 4: Automatically normalize Instructor names (e.g. "DR. ALI", "dr ali" -> "Dr. Ali")
- * Rule 1: Scoping instructors to departments
- */
-
 export function normalizeInstructorName(rawName: string): string {
   if (!rawName) return '';
 
   let name = rawName.trim().replace(/\s+/g, ' ');
 
-  // Standardize common academic prefixes
   const titleMap: Record<string, string> = {
     'dr.': 'Dr.',
     'dr': 'Dr.',
@@ -31,7 +25,6 @@ export function normalizeInstructorName(rawName: string): string {
       return titleMap[lower];
     }
     if (word.length === 0) return '';
-    // Capitalize first letter of each name word (handles hyphens like "Nisar-Ur-Rehman")
     return word
       .split('-')
       .map((part) =>
@@ -43,9 +36,6 @@ export function normalizeInstructorName(rawName: string): string {
   return normalizedWords.join(' ');
 }
 
-/**
- * Fuzzy check text inclusion for Rule 2 verification
- */
 export function containsFuzzy(sourceText: string, targetText: string): boolean {
   if (!sourceText || !targetText) return false;
   const source = sourceText.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -53,9 +43,6 @@ export function containsFuzzy(sourceText: string, targetText: string): boolean {
   return source.includes(target) || target.includes(source);
 }
 
-/**
- * Format paper title consistently
- */
 export function buildPaperTitle(
   courseCode: string,
   courseTitle: string,
@@ -82,10 +69,6 @@ const STOP_WORDS = new Set([
   'from',
 ]);
 
-/**
- * Derives a short course code from a course name when no official code exists.
- * "Data Structures & Algorithms" -> "DSA", "Digital Logic Design" -> "DLD".
- */
 export function generateCourseCode(title: string): string {
   const words = title
     .replace(/&/g, ' ')

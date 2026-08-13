@@ -11,7 +11,6 @@ const PORT = 3000;
 
 app.use(express.json({ limit: '50mb' }));
 
-// Lazy initializer for Gemini client
 function getGeminiClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -27,12 +26,10 @@ function getGeminiClient(): GoogleGenAI | null {
   });
 }
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', app: 'Prepify ATD' });
 });
 
-// AI Gatekeeper Paper Verification Endpoint (Rule 2 & Moderation)
 app.post('/api/verify-paper', async (req, res) => {
   try {
     const {
@@ -52,7 +49,6 @@ app.post('/api/verify-paper', async (req, res) => {
 
     const ai = getGeminiClient();
 
-    // If Gemini key exists, perform true AI vision inspection
     if (ai) {
       try {
         const promptText = `
@@ -80,10 +76,9 @@ Your Tasks:
 4. RETURN JSON strictly following the schema.
 `;
 
-        // Format parts with image inline data
         const contentsParts: any[] = [];
-        
-        for (const base64Img of imagesBase64.slice(0, 4)) { // check up to 4 pages
+
+        for (const base64Img of imagesBase64.slice(0, 4)) {
           let cleanData = base64Img;
           let mimeType = 'image/jpeg';
 
@@ -144,7 +139,6 @@ Your Tasks:
         const confidence = jsonResult.confidenceScore ?? 85;
         const readability = jsonResult.readabilityScore ?? 88;
 
-        // Rule 2: mismatch of any key header is a hard rejection, regardless of confidence
         const hardMismatch =
           jsonResult.matchedCourseCode === false ||
           jsonResult.matchedDepartment === false ||
@@ -193,8 +187,6 @@ Your Tasks:
       }
     }
 
-    // Heuristic Fallback Verification (when API key is missing or fallback needed)
-    // Rule 2 fuzzy logic heuristic
     const pageCount = imagesBase64.length;
     const readabilityScore = Math.floor(82 + Math.random() * 15);
     const confidenceScore = Math.floor(84 + Math.random() * 14);
@@ -228,7 +220,6 @@ Your Tasks:
 });
 
 async function startServer() {
-  // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({

@@ -47,7 +47,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div className="bg-white border border-ink/10 rounded-2xl p-4 sm:p-5 shadow-sm mb-10">
-      {/* Row 1: Search + Filter Toggle */}
       <div className="flex items-center gap-2.5">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-taupe">
@@ -97,10 +96,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </button>
       </div>
 
-      {/* Row 2: Collapsible Filters */}
       {showFilters && (
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
-          {/* Department Filter */}
           <div>
             <label className="block text-xs font-semibold text-taupe mb-1.5">
               Department
@@ -111,7 +108,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 setFilters((prev) => ({
                   ...prev,
                   departmentId: e.target.value,
-                  instructor: '', // reset instructor if dept changes
+                  instructor: '',
                 }))
               }
               className={selectClass}
@@ -125,7 +122,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             </select>
           </div>
 
-          {/* Exam Type Filter */}
           <div>
             <label className="block text-xs font-semibold text-taupe mb-1.5">
               Exam Type
@@ -146,7 +142,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             </select>
           </div>
 
-          {/* Year Filter */}
           <div>
             <label className="block text-xs font-semibold text-taupe mb-1.5">
               Year
@@ -167,7 +162,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             </select>
           </div>
 
-          {/* Instructor Filter (Scoped to Dept if selected - Rule 1) */}
           <div>
             <label className="block text-xs font-semibold text-taupe mb-1.5">
               Instructor {currentDept ? `(${currentDept.id})` : ''}
@@ -197,7 +191,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             </select>
           </div>
 
-          {/* Sort By */}
           <div>
             <label className="block text-xs font-semibold text-taupe mb-1.5">
               Sort By
@@ -221,7 +214,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </div>
       )}
 
-      {/* Footer bar with Backup toggle and Reset */}
       <div className="mt-4 pt-3.5 border-t border-ink/10 flex flex-wrap items-center justify-between gap-3 text-sm">
         <div className="flex items-center gap-5">
           <label className="flex items-center gap-2 text-taupe font-medium cursor-pointer hover:text-ink select-none">

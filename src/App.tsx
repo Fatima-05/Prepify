@@ -1,29 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Header,
-} from './components/Header';
-import {
-  SearchBar,
-} from './components/SearchBar';
-import {
-  PaperCard,
-} from './components/PaperCard';
-import {
-  PaperViewerModal,
-} from './components/PaperViewerModal';
-import {
-  UploadPaperModal,
-} from './components/UploadPaperModal';
-import {
-  AdminDashboard,
-} from './components/AdminDashboard';
-import {
-  AuthModal,
-} from './components/AuthModal';
-import {
-  Guide,
-} from './components/Guide';
-
+import { Header } from './components/Header';
+import { SearchBar } from './components/SearchBar';
+import { PaperCard } from './components/PaperCard';
+import { PaperViewerModal } from './components/PaperViewerModal';
+import { UploadPaperModal } from './components/UploadPaperModal';
+import { AdminDashboard } from './components/AdminDashboard';
+import { AuthModal } from './components/AuthModal';
+import { Guide } from './components/Guide';
 import {
   Department,
   Course,
@@ -32,61 +15,49 @@ import {
   FilterState,
   PaperStatus,
 } from './types';
-import {
-  INITIAL_DEPARTMENTS,
-  INITIAL_COURSES,
-  INITIAL_PAPERS,
-} from './data/mockData';
+import { INITIAL_DEPARTMENTS, INITIAL_COURSES, INITIAL_PAPERS } from './data/mockData';
 import { FileText, Sparkles, BookOpen } from 'lucide-react';
 
 export default function App() {
-  // Load departments with local state persistence
   const [departments, setDepartments] = useState<Department[]>(() => {
     const saved = localStorage.getItem('cui_atd_departments_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch {
-        // fallback
       }
     }
     return INITIAL_DEPARTMENTS;
   });
 
-  // Load courses (persisted so newly added courses survive reloads)
   const [courses, setCourses] = useState<Course[]>(() => {
     const saved = localStorage.getItem('cui_atd_courses_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch {
-        // fallback
       }
     }
     return INITIAL_COURSES;
   });
 
-  // Load papers store with local state persistence
   const [papers, setPapers] = useState<Paper[]>(() => {
     const saved = localStorage.getItem('cui_atd_papers_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch {
-        // fallback
       }
     }
     return INITIAL_PAPERS;
   });
 
-  // User auth state
   const [user, setUser] = useState<UserSession>(() => {
     const saved = localStorage.getItem('cui_atd_user_v2');
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch {
-        // fallback
       }
     }
     return {
@@ -97,16 +68,13 @@ export default function App() {
     };
   });
 
-  // Navigation & Modals State
   const [activeTab, setActiveTab] = useState<'browse' | 'upload' | 'admin' | 'guide'>('browse');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
 
-  // Notification Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Search Filters State
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: '',
     departmentId: '',
@@ -117,7 +85,6 @@ export default function App() {
     sortBy: 'latest',
   });
 
-  // Safe persistence helper (quota errors shouldn't crash the app)
   const persist = (key: string, value: unknown, label: string) => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -127,7 +94,6 @@ export default function App() {
     }
   };
 
-  // Save to localStorage whenever papers or departments change
   useEffect(() => {
     persist('cui_atd_papers_v2', papers, 'papers');
   }, [papers]);
@@ -157,15 +123,11 @@ export default function App() {
     toastTimer.current = setTimeout(() => setToastMessage(null), 5000);
   };
 
-  // Filter papers for public browse grid
   const visiblePapers = papers.filter((paper) => {
-    // Only show Approved papers in main search (unless admin or looking specifically)
     if (paper.status !== 'Approved') return false;
 
-    // Rule 3 filter: show main set version by default unless showBackups is toggled
     if (!filters.showBackups && !paper.isMain) return false;
 
-    // Search query match (Course code, Title, Instructor, Dept)
     if (filters.searchQuery) {
       const q = filters.searchQuery.toLowerCase();
       const matchCode = paper.courseCode.toLowerCase().includes(q);
@@ -186,7 +148,6 @@ export default function App() {
     return true;
   });
 
-  // Sort papers
   const sortedPapers = [...visiblePapers].sort((a, b) => {
     if (filters.sortBy === 'latest') return b.year - a.year;
     if (filters.sortBy === 'readability') return b.readabilityScore - a.readabilityScore;
@@ -195,7 +156,6 @@ export default function App() {
     return 0;
   });
 
-  // Paper Handlers
   const handlePaperUploaded = (newPaper: Paper, updatedExistingList?: Paper[]) => {
     if (updatedExistingList) {
       setPapers([newPaper, ...updatedExistingList]);
@@ -292,7 +252,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-cream text-ink flex flex-col font-sans">
-      {/* Top Notification Toast */}
       {toastMessage && (
         <div className="fixed top-24 right-4 z-50 bg-ink text-cream px-4 py-3 rounded-xl shadow-xl border border-ink/10 text-sm font-medium flex items-center gap-2.5">
           <Sparkles className="w-4 h-4 text-sand" />
@@ -300,7 +259,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Header Bar */}
       <Header
         user={user}
         activeTab={activeTab}
@@ -319,12 +277,9 @@ export default function App() {
         appealsCount={appealsCount}
       />
 
-      {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-        {/* TAB 1: BROWSE & GLOBAL SEARCH */}
         {activeTab === 'browse' && (
           <div>
-            {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
                 Past Papers Repository
@@ -334,7 +289,6 @@ export default function App() {
               </p>
             </div>
 
-            {/* Search Controls */}
             <SearchBar
               filters={filters}
               setFilters={setFilters}
@@ -342,11 +296,9 @@ export default function App() {
               totalResults={sortedPapers.length}
             />
 
-            {/* Papers Grid */}
             {sortedPapers.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sortedPapers.map((paper) => {
-                  // Count backups for the same course/year
                   const backupCount = papers.filter(
                     (p) =>
                       !p.isMain &&
@@ -399,7 +351,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: UPLOAD PAPER MODAL / SCREEN */}
         {activeTab === 'upload' && (
           <UploadPaperModal
             user={user}
@@ -413,7 +364,6 @@ export default function App() {
           />
         )}
 
-        {/* TAB 3: ADMIN DASHBOARD */}
         {activeTab === 'admin' && user.role === 'admin' && (
           <AdminDashboard
             papers={papers}
@@ -426,7 +376,6 @@ export default function App() {
           />
         )}
 
-        {/* TAB 4: GUIDE */}
         {activeTab === 'guide' && (
           <div className="max-w-4xl mx-auto">
             <Guide />
@@ -434,7 +383,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Paper Viewer Modal */}
       {selectedPaper && (
         <PaperViewerModal
           paper={selectedPaper}
@@ -444,7 +392,6 @@ export default function App() {
         />
       )}
 
-      {/* Auth Modal */}
       {showAuthModal && (
         <AuthModal
           onClose={() => setShowAuthModal(false)}
@@ -456,7 +403,6 @@ export default function App() {
         />
       )}
 
-      {/* Footer */}
       <footer className="bg-ink border-t border-ink/10 py-8 text-center text-sm">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">

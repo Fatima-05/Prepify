@@ -37,17 +37,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 }) => {
   const [adminTab, setAdminTab] = useState<'appeals' | 'database' | 'instructors'>('appeals');
 
-  // New Instructor state
   const [selectedDeptForInstructor, setSelectedDeptForInstructor] = useState('BCS');
   const [newInstructorName, setNewInstructorName] = useState('');
 
-  // Search filter inside admin database
   const [dbSearch, setDbSearch] = useState('');
 
   const appealedPapers = papers.filter((p) => p.status === 'Appealed');
   const approvedPapers = papers.filter((p) => p.status === 'Approved');
 
-  // Stats
   const totalDownloads = papers.reduce((sum, p) => sum + (p.downloadsCount || 0), 0);
   const autoApprovalRate =
     papers.length > 0
@@ -88,7 +85,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Top Admin Summary Banner */}
       <div className="bg-ink rounded-2xl p-6 sm:p-7 shadow-lg flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-xl bg-maroon text-cream shadow-md">
@@ -109,7 +105,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
 
-        {/* Metric Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
           {stats.map((s) => (
             <div key={s.label} className="bg-cream/10 p-3 rounded-xl border border-cream/10">
@@ -124,7 +119,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </div>
 
-      {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-2 border-b border-ink/10 pb-3 overflow-x-auto">
         {subTabs.map((tab) => {
           const Icon = tab.icon;
@@ -149,7 +143,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         })}
       </div>
 
-      {/* SUB-TAB 1: APPEALS QUEUE */}
       {adminTab === 'appeals' && (
         <div className="space-y-4">
           <h3 className="text-base font-bold text-ink">
@@ -217,7 +210,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </div>
                   </div>
 
-                  {/* Appeal Reason & AI Breakdown */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-xl space-y-1.5">
                       <span className="text-[10px] font-bold uppercase text-amber-600 block">
@@ -248,7 +240,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       )}
 
-      {/* SUB-TAB 2: DATABASE MANAGEMENT */}
       {adminTab === 'database' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-4">
@@ -378,10 +369,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       )}
 
-      {/* SUB-TAB 3: INSTRUCTORS & DEPARTMENTS (Rule 1 & Rule 4) */}
       {adminTab === 'instructors' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Add New Instructor Form */}
           <div className="bg-white border border-ink/10 rounded-2xl p-5 space-y-4 shadow-sm h-fit">
             <h3 className="font-bold text-ink text-base flex items-center gap-2">
               <Plus className="w-4 h-4 text-maroon" />
@@ -429,7 +418,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </form>
           </div>
 
-          {/* Department Faculty Mapping Lists */}
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
             {departments.map((dept) => (
               <div

@@ -11,7 +11,6 @@ const DEPARTMENT_CODES = [
   'RMS', 'RMT', 'RPM', 'RPY', 'RSW',
 ];
 
-// Seed instructors for a few core programs so dropdowns aren't empty on first run
 const INSTRUCTOR_SEEDS: Record<string, string[]> = {
   BCS: [
     'Dr. Faisal Khan',
@@ -75,7 +74,6 @@ export const INITIAL_DEPARTMENTS: Department[] = DEPARTMENT_CODES.map(
 );
 
 export const INITIAL_COURSES: Course[] = [
-  // BCS
   { code: 'CSC101', title: 'Introduction to ICT', departmentId: 'BCS' },
   { code: 'CSC103', title: 'Programming Fundamentals', departmentId: 'BCS' },
   { code: 'CSC211', title: 'Object Oriented Programming', departmentId: 'BCS' },
@@ -86,35 +84,29 @@ export const INITIAL_COURSES: Course[] = [
   { code: 'CSC354', title: 'Computer Networks', departmentId: 'BCS' },
   { code: 'CSC471', title: 'Artificial Intelligence', departmentId: 'BCS' },
 
-  // BEE
   { code: 'EEE111', title: 'Electric Circuits I', departmentId: 'BEE' },
   { code: 'EEE222', title: 'Digital Logic Design', departmentId: 'BEE' },
   { code: 'EEE312', title: 'Signals & Systems', departmentId: 'BEE' },
   { code: 'EEE331', title: 'Microprocessor Systems', departmentId: 'BEE' },
 
-  // BS (CE)
   { code: 'CVE101', title: 'Engineering Mechanics', departmentId: 'BS (CE)' },
   { code: 'CVE210', title: 'Fluid Mechanics', departmentId: 'BS (CE)' },
   { code: 'CVE315', title: 'Structural Analysis', departmentId: 'BS (CE)' },
 
-  // MBA
   { code: 'MGT101', title: 'Principles of Management', departmentId: 'MBA' },
   { code: 'MGT201', title: 'Financial Accounting', departmentId: 'MBA' },
   { code: 'MGT350', title: 'Organizational Behavior', departmentId: 'MBA' },
 
-  // HUM
   { code: 'HUM100', title: 'English Comprehension & Composition', departmentId: 'HUM' },
   { code: 'HUM110', title: 'Islamic Studies / Ethics', departmentId: 'HUM' },
   { code: 'HUM111', title: 'Pakistan Studies', departmentId: 'HUM' },
 
-  // BMT
   { code: 'MTH104', title: 'Calculus & Analytical Geometry', departmentId: 'BMT' },
   { code: 'MTH231', title: 'Linear Algebra', departmentId: 'BMT' },
   { code: 'MTH242', title: 'Differential Equations', departmentId: 'BMT' },
 ];
 
 export const INITIAL_PAPERS: Paper[] = [
-  // 1. Data Structures Terminal 2023 - MAIN
   {
     id: 'paper-csc221-term-2023-main',
     title: 'CSC221 Terminal (2023) - Data Structures & Algorithms',
@@ -204,7 +196,6 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 2. Data Structures Terminal 2023 - BACKUP (Rule 3: Less pages than main version)
   {
     id: 'paper-csc221-term-2023-backup',
     parentId: 'paper-csc221-term-2023-main',
@@ -222,8 +213,8 @@ export const INITIAL_PAPERS: Paper[] = [
     status: 'Approved',
     confidenceScore: 84,
     readabilityScore: 78,
-    pageCount: 2, // Incomplete scan with 2 pages instead of 3
-    isMain: false, // Rule 3: Demoted to backup because main version has 3 pages
+    pageCount: 2,
+    isMain: false,
     downloadsCount: 45,
     images: [
       {
@@ -275,7 +266,6 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 3. Programming Fundamentals Mid 2024 - MAIN
   {
     id: 'paper-csc103-sess1-2024-main',
     title: 'CSC103 Mid (2024) - Programming Fundamentals',
@@ -346,7 +336,6 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 4. Digital Logic Design Terminal 2023 - MAIN
   {
     id: 'paper-eee222-term-2023-main',
     title: 'EEE222 Terminal (2023) - Digital Logic Design',
@@ -417,7 +406,6 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 5. Calculus & Analytical Geometry Mid 2023 - MAIN
   {
     id: 'paper-mth104-sess2-2023-main',
     title: 'MTH104 Mid (2023) - Calculus & Analytical Geometry',
@@ -488,7 +476,6 @@ export const INITIAL_PAPERS: Paper[] = [
     },
   },
 
-  // 6. Appealed Paper in Admin Queue (hard-rejected initially, user appealed)
   {
     id: 'paper-csc322-term-2023-appealed',
     title: 'CSC322 Terminal (2023) - Operating Systems [Appealed Submission]',
@@ -503,7 +490,7 @@ export const INITIAL_PAPERS: Paper[] = [
     uploaderName: 'Bilal Hassan',
     createdAt: '2024-02-01T16:20:00Z',
     status: 'Appealed',
-    confidenceScore: 48, // Hard rejected (<50%)
+    confidenceScore: 48,
     readabilityScore: 52,
     pageCount: 2,
     isMain: false,

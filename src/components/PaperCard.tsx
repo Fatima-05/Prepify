@@ -55,30 +55,25 @@ export const PaperCard: React.FC<PaperCardProps> = ({
           : 'border-ink/10 bg-white/70 hover:border-sand/60'
       }`}
     >
-      {/* Top badges bar */}
       <div className="flex items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Exam Type Badge */}
           <span
             className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${EXAM_STYLES[paper.examType] || 'bg-ink/5 text-taupe border-ink/10'}`}
           >
             {paper.examType}
           </span>
 
-          {/* Department Code */}
           <span className="px-2 py-1 rounded-md text-xs font-semibold bg-cream text-taupe border border-ink/10">
             {paper.departmentId}
           </span>
         </div>
 
-        {/* AI Verification Score */}
         <div className="flex items-center gap-1 text-xs font-semibold text-sand-dark">
           <Sparkles className="w-3.5 h-3.5 text-sand" />
           <span>{paper.confidenceScore}%</span>
         </div>
       </div>
 
-      {/* Main Course Info */}
       <div className="mb-4">
         <div className="flex items-baseline gap-2 mb-1.5">
           <h3 className="font-mono text-lg font-extrabold text-maroon tracking-tight">
@@ -91,7 +86,6 @@ export const PaperCard: React.FC<PaperCardProps> = ({
         </h4>
       </div>
 
-      {/* Rule 3 status */}
       <div className="mb-4 flex items-center gap-1.5">
         {paper.isMain ? (
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700">
@@ -106,7 +100,6 @@ export const PaperCard: React.FC<PaperCardProps> = ({
         )}
       </div>
 
-      {/* Meta details */}
       <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-taupe mb-5 bg-cream/50 rounded-xl px-3.5 py-3">
         <div className="flex items-center gap-1.5 truncate">
           <User className="w-3.5 h-3.5 text-sand shrink-0" />
@@ -135,7 +128,6 @@ export const PaperCard: React.FC<PaperCardProps> = ({
         </div>
       </div>
 
-      {/* Footer controls */}
       <div className="flex items-center justify-between pt-4 border-t border-ink/10">
         <div className="flex items-center gap-2.5">
           {backupCount > 0 && paper.isMain && (

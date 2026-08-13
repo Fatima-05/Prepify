@@ -38,7 +38,6 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-ink/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
-          {/* Brand & Logo */}
           <div
             className="flex items-center gap-3 cursor-pointer group shrink-0"
             onClick={() => setActiveTab('browse')}
@@ -61,7 +60,6 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-1.5">
             {NAV_ITEMS.filter(
               (item) => !item.adminOnly || user.role === 'admin'
@@ -108,7 +106,6 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* User Auth Controls */}
           <div className="flex items-center gap-3">
             {user.isAuthenticated ? (
               <div className="flex items-center gap-3">
