@@ -20,6 +20,9 @@ import {
 import {
   AuthModal,
 } from './components/AuthModal';
+import {
+  Guide,
+} from './components/Guide';
 
 import {
   Department,
@@ -95,7 +98,7 @@ export default function App() {
   });
 
   // Navigation & Modals State
-  const [activeTab, setActiveTab] = useState<'browse' | 'upload' | 'admin'>('browse');
+  const [activeTab, setActiveTab] = useState<'browse' | 'upload' | 'admin' | 'guide'>('browse');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
 
@@ -278,7 +281,7 @@ export default function App() {
 
   const appealsCount = papers.filter((p) => p.status === 'Appealed').length;
 
-  const navigateTo = (tab: 'browse' | 'upload' | 'admin') => {
+  const navigateTo = (tab: 'browse' | 'upload' | 'admin' | 'guide') => {
     if (tab === 'admin' && user.role !== 'admin') {
       showToast('Admin access requires signing in as an administrator.');
       setShowAuthModal(true);
@@ -421,6 +424,13 @@ export default function App() {
             onAddInstructor={handleAddInstructor}
             onSelectPaper={(paper) => setSelectedPaper(paper)}
           />
+        )}
+
+        {/* TAB 4: GUIDE */}
+        {activeTab === 'guide' && (
+          <div className="max-w-4xl mx-auto">
+            <Guide />
+          </div>
         )}
       </main>
 

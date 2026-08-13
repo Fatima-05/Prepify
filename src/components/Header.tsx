@@ -5,14 +5,15 @@ import {
   ShieldCheck,
   UserCheck,
   Search,
+  Info,
   LogOut,
 } from 'lucide-react';
 import { UserSession } from '../types';
 
 interface HeaderProps {
   user: UserSession;
-  activeTab: 'browse' | 'upload' | 'admin';
-  setActiveTab: (tab: 'browse' | 'upload' | 'admin') => void;
+  activeTab: 'browse' | 'upload' | 'admin' | 'guide';
+  setActiveTab: (tab: 'browse' | 'upload' | 'admin' | 'guide') => void;
   onOpenAuthModal: () => void;
   onLogout: () => void;
   appealsCount: number;
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { id: 'browse' as const, label: 'Search Papers', icon: Search },
   { id: 'upload' as const, label: 'Upload Paper', icon: Upload },
   { id: 'admin' as const, label: 'Admin', icon: ShieldCheck, adminOnly: true },
+  { id: 'guide' as const, label: 'Guide', icon: Info },
 ];
 
 export const Header: React.FC<HeaderProps> = ({
